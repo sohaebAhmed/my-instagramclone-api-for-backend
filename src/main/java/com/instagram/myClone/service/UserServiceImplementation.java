@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.instagram.myClone.dto.UserDto;
 import com.instagram.myClone.exceptions.UserException;
 import com.instagram.myClone.modal.User;
 import com.instagram.myClone.repository.UserRepository;
 
+
+@Service
 public class UserServiceImplementation implements UserService{
 	
 	@Autowired
