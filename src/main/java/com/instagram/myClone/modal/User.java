@@ -52,6 +52,10 @@ public class User {
 	
 	@ManyToMany
 	private List<Post> savedPost = new ArrayList<>();
+
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
 	
 	public User(Integer id, String username, String name, String email, String mobile, String website, String bio,
 			String gender, String image, String password, Set<UserDto> follower, Set<UserDto> following,
@@ -73,6 +77,7 @@ public class User {
 		this.savedPost = savedPost;
 	}
 	
+
 	public Integer getId() {
 		return id;
 	}

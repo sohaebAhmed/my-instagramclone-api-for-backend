@@ -17,6 +17,9 @@ public class UserDto {
 		this.name = name;
 		this.userImage = userImage;
 	}
+	public UserDto() {
+		// TODO Auto-generated constructor stub
+	}
 	@Override
 	public int hashCode() {
 		return Objects.hash(email, id, name, userImage, username);
