@@ -16,8 +16,8 @@ public class AppConfig {
 		.authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/signup").permitAll()
 		.anyRequest().authenticated()
 		.and()
-		.addFilterAfter(null, null)
-		.addFilterBefore(null, null)
+		.addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+		.addFilterBefore(new JwtTokenValidationFilter(), BasicAuthenticationFilter.class)
 		.csrf().disable()
 		.fromLogin().and().httpBasic();
 		
