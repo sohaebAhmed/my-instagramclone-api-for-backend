@@ -10,6 +10,8 @@ import com.instagram.myClone.dto.UserDto;
 import com.instagram.myClone.exceptions.UserException;
 import com.instagram.myClone.modal.User;
 import com.instagram.myClone.repository.UserRepository;
+import com.instagram.myClone.security.JwtTokenClaims;
+import com.instagram.myClone.security.JwtTokenProvider;
 
 
 @Service
@@ -17,7 +19,12 @@ public class UserServiceImplementation implements UserService{
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
+	private JwtTokenProvider jwtTokenProvider;
+	
 	@Override
 	public User registerUser(User user) throws UserException {
 
@@ -61,8 +68,19 @@ public class UserServiceImplementation implements UserService{
 
 	@Override
 	public User findUserProfile(String token) throws UserException {
-		// TODO Auto-generated method stub
-		return null;
+		token=token.substring(7);
+		
+		JwtTokenClaims jwtTokenClaims = jwtTokenProvider.getClaimsFromToken(token);
+		
+		String email = jwtTokenClaims.getUsername() ;
+		
+		Optional<User> opt = userRepository.findByEmail(email);
+		
+		if (opt.isPresent()) {
+			return opt.get();
+		}
+
+		throw new UserException("invalid token...");
 	}
 
 	@Override
