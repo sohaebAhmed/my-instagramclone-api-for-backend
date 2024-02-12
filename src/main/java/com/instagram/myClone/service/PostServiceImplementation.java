@@ -12,6 +12,7 @@ import com.instagram.myClone.exceptions.PostException;
 import com.instagram.myClone.exceptions.UserException;
 import com.instagram.myClone.modal.Post;
 import com.instagram.myClone.repository.PostRepository;
+import com.instagram.myClone.repository.UserRepository;
 
 @Service
 public class PostServiceImplementation implements PostService{
@@ -19,6 +20,10 @@ public class PostServiceImplementation implements PostService{
 	@Autowired
 	private PostRepository postRepository;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
 	private UserService userService;
 	
 	@Override
@@ -42,8 +47,15 @@ public class PostServiceImplementation implements PostService{
 
 	@Override
 	public String deletePost(Integer postId, Integer userId) throws UserException, PostException {
-		// TODO Auto-generated method stub
-		return null;
+		Post post = findPostById(postId);
+		User user = userService.findUserById(userId);
+		
+		if (post.getUser().getId().equals(user.getId())) {
+			postRepository.deletePostById(post.getId());
+			return "Post dleted successfully";
+		}
+		
+		throw new PostException("You cant delete other users post");
 	}
 
 	@Override
@@ -74,32 +86,74 @@ public class PostServiceImplementation implements PostService{
 
 	@Override
 	public List<Post> findAllPostByUserIds(List<Integer> userIds) throws PostException, UserException {
-		// TODO Auto-generated method stub
-		return null;
+
+
+		List<Post> posts = postRepository.findAllPostByUserIds(userIds);
+		
+		if (posts.size() == 0) {
+			throw new PostException("No available posts");
+		}
+		
+		return posts;
 	}
 
 	@Override
 	public String savedPost(Integer postId, Integer userId) throws PostException, UserException {
-		// TODO Auto-generated method stub
-		return null;
+
+		Post post = findPostById(postId);
+		
+		User user = userService.findUserById(userId);
+		
+		if (!user.getSavedPost().contains(post)) {
+			user.getSavedPost().add(post);
+			userRepository.save(user);
+		}
+		return "Post saved successfully";
 	}
 
 	@Override
 	public String unSavedPost(Integer postId, Integer userId) throws PostException, UserException {
-		// TODO Auto-generated method stub
-		return null;
+		Post post = findPostById(postId);
+		
+		User user = userService.findUserById(userId);
+		
+		if (user.getSavedPost().contains(post)) {
+			user.getSavedPost().remove(post);
+			userRepository.save(user);
+		}
+		return "Post removed successfully";
 	}
 
 	@Override
 	public Post likePost(Integer postId, Integer userId) throws PostException, UserException {
-		// TODO Auto-generated method stub
-		return null;
+		Post post = findPostById(postId);
+		User user = userService.findUserById(userId);
+		
+		UserDto userDto = new UserDto();
+		userDto.setEmail(user.getEmail());
+		userDto.setId(user.getId());
+		userDto.setName(user.getName());
+		userDto.setUserImage(user.getUserImage());
+		userDto.setUsername(user.getUsername());
+		
+		post.getLikedByUsers().add(userDto);
+		return postRepository.save(post);
 	}
 
 	@Override
 	public Post unLikePost(Integer postId, Integer userId) throws PostException, UserException {
-		// TODO Auto-generated method stub
-		return null;
+		Post post = findPostById(postId);
+		User user = userService.findUserById(userId);
+		
+		UserDto userDto = new UserDto();
+		userDto.setEmail(user.getEmail());
+		userDto.setId(user.getId());
+		userDto.setName(user.getName());
+		userDto.setUserImage(user.getUserImage());
+		userDto.setUsername(user.getUsername());
+		
+		post.getLikedByUsers().remove(userDto);
+		return postRepository.save(post);
 	}
 
 }
