@@ -6,6 +6,7 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,8 +80,46 @@ public class PostController {
 		return new ResponseEntity<Post>(likedPost, HttpStatus.OK);
 	}
 	
-	public ResponseEntity<MessageResponse> deletePostHandler(Integer postId, @RequestHeader("Authorization") String token) {
+	@DeleteMapping("/delete/{postId}")
+	public ResponseEntity<MessageResponse> deletePostHandler(@PathVariable Integer postId, @RequestHeader("Authorization") String token) {
+		User user = userService.findUserProfile(token);
 		
+		String message = postService.deletePost(postId, user.getId());
+		MessageResponse res = new MessageResponse(message);
+		return new ResponseEntity<MessageResponse>(res, HttpStatus.OK);
 	}
+	
+	@PutMapping("/save_post/{postId}")
+	public ResponseEntity<MessageResponse> savedPostHandler(@PathVariable Integer postId, @RequestHeader("Authorization") String token) {
+		User user = userService.findUserProfile(token);
+		
+		String message = postService.savedPost(postId, user.getId());
+		
+		MessageResponse res = new MessageResponse(message);
+		
+		return new ResponseEntity<MessageResponse>(res, HttpStatus.ACCEPTED);
+	}
+	
+	@PutMapping("/unsave_post/{postId}")
+	public ResponseEntity<MessageResponse> unsavedPostHandler(@PathVariable Integer postId, @RequestHeader("Authorization") String token) {
+		User user = userService.findUserProfile(token);
+		
+		String message = postService.unsavedPost(postId, user.getId());
+		
+		MessageResponse res = new MessageResponse(message);
+		
+		return new ResponseEntity<MessageResponse>(res, HttpStatus.ACCEPTED);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
