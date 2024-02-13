@@ -1,6 +1,7 @@
 package com.instagram.myClone.modal;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.instagram.myClone.dto.UserDto;
 
@@ -34,7 +35,7 @@ public class Story {
 	@NotNull
 	private String image;
 	private String caption;
-	private LocalDate timestamp;
+	private LocalDateTime timestamp;
 	
 	
 	public Story() {
@@ -42,7 +43,7 @@ public class Story {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Story(Integer id, UserDto user, String image, String caption, LocalDate timestamp) {
+	public Story(Integer id, UserDto user, String image, String caption, LocalDateTime timestamp) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -87,8 +88,8 @@ public class Story {
 		return timestamp;
 	}
 
-	public void setTimestamp(LocalDate timestamp) {
-		this.timestamp = timestamp;
+	public void setTimestamp(LocalDateTime localDateTime) {
+		this.timestamp = localDateTime;
 	}
 	
 	
