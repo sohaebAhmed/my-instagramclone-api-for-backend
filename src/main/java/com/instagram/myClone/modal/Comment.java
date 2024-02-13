@@ -36,6 +36,10 @@ public class Comment {
 	private String content;
 	private LocalDateTime createdAt;
 	
+	public Comment() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Embedded
 	@ElementCollection
 	private Set<UserDto> likedByUsers = new HashSet();
